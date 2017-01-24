@@ -15,9 +15,15 @@ var countWoman = 0;
 var countInd = 0;
 var additionMan = 0; 
 var additionWoman = 0;
-var addBirthRate = 0;
-var addDeathRate = 0;
+var birthRate = 0;
+var deathRate = 0;
 var obj1 = [];
+var year;
+var yearAsian;
+var value;
+var val;
+var val1;
+var array3 = [];
 
 
 rl.on('line',function(line){
@@ -26,145 +32,104 @@ rl.on('line',function(line){
 	head = line.split(",");
 	heading = false;
 	}
-   
-/*//start first part
-
-var countries = ["AFG","ARM","AZE","BHR","BGD","BTN","BRN","KHM","CHN",
+   var headIndexCountry = head.indexOf("CountryName");
+   var headIndexYear = head.indexOf("Year");
+   var headIndexValue = head.indexOf("Value");
+//start first part
+  var countries = ["AFG","ARM","AZE","BHR","BGD","BTN","BRN","KHM","CHN",
                  "CXR","CCK","IOT","GEO","HGK","IND","IDN","IRN","IRQ","ISR","JPN","JOR",
 				 "KAG","KWT","KGZ","LAO","LBN","MAC","MYS","MDV","MNG","MMR","NPL","PRK",
 				 "OMN","PAK","PSE","PHL","QAT","SAU","SGP","KOR","LKA","SYR","TWN","TJK",
 				 "THA","TUR","TKM","ARE","UZB","VNM","YEM"];
-//var countriesLength = countries.length;
-
 //for(var i=0,countriesLength = countries.length; i<countriesLength; i++)
-var i = 0;
-countries.forEach(function(){
 
-	if(line.indexOf(countries[i]) > -1) {
-		if((line.indexOf("SP.DYN.LE00.MA.IN") > -1) || (line.indexOf("SP.DYN.LE00.FE.IN") > -1)){
-			var obj = {}; // object creation
-			currentLine = line.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);    // split the current line
-			
-			//for(var j=0;j<head.length;j++)
-			var j = 0;
-			head.forEach(function()
-			{
-				if(head[j] == "Year" || head[j]=="Value"){
+currentLine = line.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
+countries.reduce(function(previous,current){
+    var obj = {};
+  if(currentLine.includes(current)){
 
-					if(head[j] == "Year"){
-						year = currentLine[j]; // year is assigned here
-					}// nested year if
+  	  if(currentLine.indexOf("SP.DYN.LE00.MA.IN")>-1){
+  	  	    year = currentLine[headIndexYear];
+  	  		val = parseFloat(currentLine[headIndexValue]);
+  	  		additionMan = additionMan + val;
+  	  		countMan++;
+  	  }
+  	    
+  	  if(currentLine.indexOf("SP.DYN.LE00.FE.IN")>-1){
+  	  	    val1 = parseFloat(currentLine[headIndexValue]);
+  	  		additionWoman =  additionWoman + val1;
+  	  } 
 
-					if(head[j] == "Value"){
-						if(line.indexOf("SP.DYN.LE00.MA.IN") > -1){
-							val = parseFloat(currentLine[j]);  //conversion of string in float
-							additionMan = additionMan + val;       //if more values make them add togethers
-							countMan++;
-						}// if it is man values
+  	  if(countMan == 52){
+			var avgMan = additionMan/52;         //calculate average because there are many countries in same year
+			var avgWoman = additionWoman/52;
+			obj.Year = year;
+			obj.Male = avgMan;
+			obj.FeMale = avgWoman;
 
-						else{
-							val = parseFloat(currentLine[j]);
-							additionWoman =  additionWoman + val;
-							countWoman++;
-						}// if it is woman values
+			countMan = 0;
+			additionMan = 0;
+			additionWoman = 0;
+			manWoman.push(obj);       //here push the object into "cn" array
+	  } 
+  	  
+  }
+});
 
-						if(countMan == 52){
-			               var avgMan = additionMan/52;         //calculate average because there are many countries in same year
-			               var avgWoman = additionWoman/52;
-			                obj.Year = year;
-			                obj.Male = avgMan;
-			                obj.FeMale = avgWoman;
 
-			                 countMan = 0;
-			                 additionMan = 0;
-			                 additionWoman = 0;
-			                 manWoman.push(obj);       //here push the object into "cn" array
-			              }
 
-						}// nested value if
 
-					} // if in inner for loop
-					j++;
-				});// inner forEach loop
-			}// end of secound if
 
-		} // end of first if
-	    i++;
-	});  //end of forEach
+currentLine.filter(function(value,index,array){
 
-    //end first part 
+	  if (currentLine.includes("IND")){
+	  	if(value === "SP.DYN.CBRT.IN"){
+		   
+		   year = currentLine[headIndexYear];
+		   birthRate = parseFloat(currentLine[headIndexValue]);		
+		   countInd++;
+	  	}
+             var objInd = {}; // object creation
 
-    */
-  /*  // start second part
+	  	if(value === "SP.DYN.CDRT.IN"){
+		   deathRate = parseFloat(currentLine[headIndexValue]);		
+			countInd++;
+	  	}
+	  	        
+	  	if(countInd == 2){
+			objInd.Year = year;
+			objInd.BirthRate = birthRate;
+			objInd.DeathRate = deathRate; 
+			countInd = 0;
 
-	if(line.indexOf("IND") > -1){
-		if((line.indexOf("SP.DYN.CBRT.IN") > -1) || (line.indexOf("SP.DYN.CDRT.IN") > -1)){
-			var objInd = {}; // object creation
-			currentLineInd = line.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
-			for(var k=0;k<head.length;k++){
-				if(head[k] == "Year" || head[k] == "Value"){
-					if(head[k] == "Year"){
-						var yearInd = currentLineInd[k];
-					} // year end
-
-					if(head[k] == "Value"){
-						if(line.indexOf("SP.DYN.CBRT.IN") > -1){
-							var birthRate = parseFloat(currentLineInd[k]);
-							addBirthRate = addBirthRate + birthRate;
-							countInd++;
-						}  // for birthRate
-
-						else{
-							var deathRate = parseFloat(currentLineInd[k]);
-							addDeathRate = addDeathRate + deathRate;
-							countInd++;
-						} // for deathRate
-					}   // value end
-				} // head checking end 
-
-				if(countInd == 2){
-					objInd.Year = yearInd;
-					objInd.BirthRate = addBirthRate;
-					objInd.DeathRate = addDeathRate;
-					addBirthRate = 0;
-					addDeathRate = 0;
-					countInd = 0;
-
-					india.push(objInd);
-				}
-
-			}
+			india.push(objInd);
 		}
+	  }
+       
+       			
+    });
+      var object3 = {}; // object creation
 
-	}// for india only
-    
-    // end second Part*/
+	  if ((line.indexOf("SP.DYN.LE00.IN")>-1)&&(line.indexOf("2013")>-1)){
+		   
+		   object3.CountryName = currentLine[headIndexCountry];
+		   object3.Value = currentLine[headIndexValue];
+		   array3.push(object3);		
+     
+	  }
 
-   // start third Part
-   
-   if((line.indexOf("SP.DYN.LE00.IN")>-1)&&(line.indexOf("2013")>-1)){
-     var objSort={};
-     var currentlineSort=line.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
-        for(var j=0;j<head.length;j++){
-          if(head[j]=="CountryName"||head[j]=="Value"){
-           objSort[head[j]] = currentlineSort[j];
-          }
-         
-        }
-         obj1.push(objSort);
-       }
-    
-    obj1.sort(function(a, b){
-    	return b.Value - a.Value});
+	  array3.sort(function(a, b){
+      return b.Value - a.Value
+      });
+       
 
+});
 
 
-
-}); // end of rl
 
 rl.on('close', function() {
 
- /*var firstFile = JSON.stringify(manWoman);
+var firstFile = JSON.stringify(manWoman);
  firstFile = firstFile.replace("[","[\n\t");          
  firstFile = firstFile.replace(/},/g,"},\n\t");     
  firstFile = firstFile.replace(/,/g,",\n\t");
@@ -177,28 +142,28 @@ rl.on('close', function() {
 
  });
 
+ var SecondFile = JSON.stringify(india);
+ SecondFile = SecondFile.replace("[","[\n\t");          
+ SecondFile = SecondFile.replace(/},/g,"},\n\t");     
+ SecondFile = SecondFile.replace(/,/g,",\n\t");
+ SecondFile = SecondFile.replace("]","\n\t]");
 
- var secondFile = JSON.stringify(india);
- secondFile = secondFile.replace("[","[\n\t");          
- secondFile = secondFile.replace(/},/g,"},\n\t");     
- secondFile = secondFile.replace(/,/g,",\n\t");
- secondFile = secondFile.replace("]","\n\t]");
-
- fs.writeFile("text2.JSON",secondFile,function(err) {
+ fs.writeFile("text2.JSON",SecondFile,function(err) {
    if(err){
     throw err;
    }
 
- });*/
- var obj3=obj1.splice(0,5);
- var p3=JSON.stringify(obj3);
- p3=p3.replace("[","[\n\t");
- p3= p3.replace(/},/g,"},\n\t");
- p3= p3.replace(/\\"/g,"");
+ });
 
- console.log(p3);
+ var object3=array3.splice(0,5);
+ var thirdFile=JSON.stringify(object3);
+ thirdFile=thirdFile.replace("[","[\n\t");
+ thirdFile= thirdFile.replace(/},/g,"},\n\t");
+ thirdFile= thirdFile.replace(/\\"/g,"");
+
+ console.log(thirdFile);
  
- fs.writeFile("text3.JSON",p3,function(err) {
+ fs.writeFile("text3.JSON",thirdFile,function(err) {
 if(err){
     throw err;
 }
