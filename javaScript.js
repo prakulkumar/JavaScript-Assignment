@@ -4,10 +4,10 @@ var stream = require('stream');
 var instream = fs.createReadStream('../Indicators.csv');
 var outstream = new stream;
 var rl = readline.createInterface(instream, outstream);
-var heading=true;
-var head=[];
-var manWoman=[];
-var india=[];
+var heading = true;
+var head = [];
+var manWoman = [];
+var india = [];
 var currentLine; // variable for data in current line
 var currentLineInd;
 var countMan = 0;
@@ -17,17 +17,17 @@ var additionMan = 0;
 var additionWoman = 0;
 var addBirthRate = 0;
 var addDeathRate = 0;
-
+var obj1 = [];
 
 
 rl.on('line',function(line){
 
   if(heading){
-	head=line.split(",");
-	heading=false;
+	head = line.split(",");
+	heading = false;
 	}
    
-//start first part
+/*//start first part
 
 var countries = ["AFG","ARM","AZE","BHR","BGD","BTN","BRN","KHM","CHN",
                  "CXR","CCK","IOT","GEO","HGK","IND","IDN","IRN","IRQ","ISR","JPN","JOR",
@@ -40,8 +40,8 @@ var countries = ["AFG","ARM","AZE","BHR","BGD","BTN","BRN","KHM","CHN",
 var i = 0;
 countries.forEach(function(){
 
-	if(line.indexOf(countries[i])>-1) {
-		if((line.indexOf("SP.DYN.LE00.MA.IN")>-1)||(line.indexOf("SP.DYN.LE00.FE.IN")>-1)){
+	if(line.indexOf(countries[i]) > -1) {
+		if((line.indexOf("SP.DYN.LE00.MA.IN") > -1) || (line.indexOf("SP.DYN.LE00.FE.IN") > -1)){
 			var obj = {}; // object creation
 			currentLine = line.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);    // split the current line
 			
@@ -49,35 +49,35 @@ countries.forEach(function(){
 			var j = 0;
 			head.forEach(function()
 			{
-				if(head[j]=="Year"||head[j]=="Value"){
+				if(head[j] == "Year" || head[j]=="Value"){
 
-					if(head[j]=="Year"){
+					if(head[j] == "Year"){
 						year = currentLine[j]; // year is assigned here
 					}// nested year if
 
-					if(head[j]=="Value"){
-						if(line.indexOf("SP.DYN.LE00.MA.IN")>-1){
-							val=parseFloat(currentLine[j]);  //conversion of string in float
+					if(head[j] == "Value"){
+						if(line.indexOf("SP.DYN.LE00.MA.IN") > -1){
+							val = parseFloat(currentLine[j]);  //conversion of string in float
 							additionMan = additionMan + val;       //if more values make them add togethers
 							countMan++;
 						}// if it is man values
 
 						else{
-							val=parseFloat(currentLine[j]);
+							val = parseFloat(currentLine[j]);
 							additionWoman =  additionWoman + val;
 							countWoman++;
 						}// if it is woman values
 
-						if(countMan==52){
-			               var avgMan=additionMan/52;         //calculate average because there are many countries in same year
-			               var avgWoman=additionWoman/52;
-			                obj.Year=year;
+						if(countMan == 52){
+			               var avgMan = additionMan/52;         //calculate average because there are many countries in same year
+			               var avgWoman = additionWoman/52;
+			                obj.Year = year;
 			                obj.Male = avgMan;
-			                obj.FeMale= avgWoman;
+			                obj.FeMale = avgWoman;
 
-			                 countMan=0;
-			                 additionMan=0;
-			                 additionWoman=0;
+			                 countMan = 0;
+			                 additionMan = 0;
+			                 additionWoman = 0;
 			                 manWoman.push(obj);       //here push the object into "cn" array
 			              }
 
@@ -94,21 +94,21 @@ countries.forEach(function(){
 
     //end first part 
 
-    
-    // start second part
+    */
+  /*  // start second part
 
-	if(line.indexOf("IND")>-1){
-		if((line.indexOf("SP.DYN.CBRT.IN")>-1)||(line.indexOf("SP.DYN.CDRT.IN")>-1)){
+	if(line.indexOf("IND") > -1){
+		if((line.indexOf("SP.DYN.CBRT.IN") > -1) || (line.indexOf("SP.DYN.CDRT.IN") > -1)){
 			var objInd = {}; // object creation
 			currentLineInd = line.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
 			for(var k=0;k<head.length;k++){
-				if(head[k] == "Year"||head[k] == "Value"){
+				if(head[k] == "Year" || head[k] == "Value"){
 					if(head[k] == "Year"){
 						var yearInd = currentLineInd[k];
 					} // year end
 
 					if(head[k] == "Value"){
-						if(line.indexOf("SP.DYN.CBRT.IN")>-1){
+						if(line.indexOf("SP.DYN.CBRT.IN") > -1){
 							var birthRate = parseFloat(currentLineInd[k]);
 							addBirthRate = addBirthRate + birthRate;
 							countInd++;
@@ -138,27 +138,24 @@ countries.forEach(function(){
 
 	}// for india only
     
-    // end second Part
+    // end second Part*/
 
    // start third Part
-   /*var totalCountries = [];
-   var yearTotal;
-   var valueTotal;
-   var currentLineTotal;
-   var array1 = [];
-
-   if((line.indexOf("SP.DYN.LE00.IN")>-1)&&(line.indexOf("1960")>-1)){
-        var objTotal = {}; // object creation
-        var countryName;
-		currentLineTotal = line.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
-		for(var x=0;x<head.length;x++){
-			if(head[x] == "CountryName"){
-
-			}
-		}
-
-
-   } //end if*/
+   
+   if((line.indexOf("SP.DYN.LE00.IN")>-1)&&(line.indexOf("2013")>-1)){
+     var objSort={};
+     var currentlineSort=line.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
+        for(var j=0;j<head.length;j++){
+          if(head[j]=="CountryName"||head[j]=="Value"){
+           objSort[head[j]] = currentlineSort[j];
+          }
+         
+        }
+         obj1.push(objSort);
+       }
+    
+    obj1.sort(function(a, b){
+    	return b.Value - a.Value});
 
 
 
@@ -167,7 +164,7 @@ countries.forEach(function(){
 
 rl.on('close', function() {
 
- var firstFile = JSON.stringify(manWoman);
+ /*var firstFile = JSON.stringify(manWoman);
  firstFile = firstFile.replace("[","[\n\t");          
  firstFile = firstFile.replace(/},/g,"},\n\t");     
  firstFile = firstFile.replace(/,/g,",\n\t");
@@ -192,6 +189,19 @@ rl.on('close', function() {
     throw err;
    }
 
- });
+ });*/
+ var obj3=obj1.splice(0,5);
+ var p3=JSON.stringify(obj3);
+ p3=p3.replace("[","[\n\t");
+ p3= p3.replace(/},/g,"},\n\t");
+ p3= p3.replace(/\\"/g,"");
+
+ console.log(p3);
+ 
+ fs.writeFile("text3.JSON",p3,function(err) {
+if(err){
+    throw err;
+}
+});
 
 });

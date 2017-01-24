@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.bar {
+  fill: blue;
+}
+
+.bar:hover {
+  fill: grey;
+}
+
+
+</style>
+  <h3>Top 5 countries with highest Life expectancy at birth </h3>
+<svg width="500" height="500"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+
+<script>
+
+var cravan = d3.select("svg"),
+    margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = cravan.attr("width") - margin.left - margin.right,
+    height = cravan.attr("height") - margin.top - margin.bottom;
+
+var xAxis = d3.scaleBand().rangeRound([0, width]).padding(0.1),
+    yAxis = d3.scaleLinear().rangeRound([height, 0]);
+
+var group = cravan.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.json("text3.JSON", function(data) {
+
+  xAxis.domain(data.map(function(d) { return d.CountryName; }));
+  yAxis.domain([80, d3.max(data, function(d) { return d.Value; })]);
+  
+
+  group.append("g")
+      
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(xAxis));
+
+
+  group.append("g")
+      
+      .call(d3.axisLeft(yAxis).ticks(10))
+      .append("text")
+	      .attr("transform", "rotate(-90)")
+	      .attr("dy", "0.71em")
+	      .attr("text-anchor", "end")
+	      .text("Frequency");
+
+  group.selectAll(".bar")
+      .data(data)
+      .enter()
+      .append("rect")
+	      .attr("class", "bar")
+	      .attr("x", function(d) { return xAxis(d.CountryName); })
+	      .attr("y", function(d) { return yAxis(d.Value); })
+	      .attr("width", xAxis.bandwidth())
+	      .attr("height", function(d) { return height - yAxis(d.Value); });
+	});
+
+</script>
